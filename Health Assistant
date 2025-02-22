@@ -1,32 +1,36 @@
-import torch
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AI Health Assistant</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #chatbox { width: 100%; height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+        input { width: 80%; padding: 10px; }
+        button { padding: 10px; }
+    </style>
+</head>
+<body>
+    <h2>AI Health Assistant</h2>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Describe your symptoms...">
+    <button onclick="sendMessage()">Send</button>
 
-# Initialize the pre-trained GPT-2 model and tokenizer
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-model = GPT2LMHeadModel.from_pretrained("gpt2")
+    <script>
+        const chatbox = document.getElementById('chatbox');
 
-# Function to generate responses based on input health queries
-def generate_health_response(query):
-    # Encode the input question
-    inputs = tokenizer.encode(query, return_tensors="pt")
+        function sendMessage() {
+            const input = document.getElementById('userInput').value;
+            chatbox.innerHTML += `<p>User: ${input}</p>`;
+            document.getElementById('userInput').value = '';
 
-    # Generate response using the model
-    outputs = model.generate(inputs, max_length=150, num_return_sequences=1, no_repeat_ngram_size=2)
+            // Simple AI Response
+            let response = "I'm not sure. Please consult a doctor.";
+            if (input.toLowerCase().includes('fever')) {
+                response = "You may have a fever. Stay hydrated and consider medical attention if it persists.";
+            }
 
-    # Decode the generated response and return it
-    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return response
-
-# Example questions that the assistant could answer
-questions = [
-    "What are the symptoms of flu?",
-    "How can I lose weight safely?",
-    "What is a healthy diet?",
-    "What is a good exercise routine?"
-]
-
-# Answer the questions
-for question in questions:
-    print(f"Question: {question}")
-    print("Answer: ", generate_health_response(question))
-    print("\n" + "="*50 + "\n")
+            chatbox.innerHTML += `<p>AI Assistant: ${response}</p>`;
+        }
+    </script>
+</body>
+</html>
