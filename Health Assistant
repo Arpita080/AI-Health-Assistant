@@ -1,0 +1,32 @@
+import torch
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
+# Initialize the pre-trained GPT-2 model and tokenizer
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+
+# Function to generate responses based on input health queries
+def generate_health_response(query):
+    # Encode the input question
+    inputs = tokenizer.encode(query, return_tensors="pt")
+
+    # Generate response using the model
+    outputs = model.generate(inputs, max_length=150, num_return_sequences=1, no_repeat_ngram_size=2)
+
+    # Decode the generated response and return it
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return response
+
+# Example questions that the assistant could answer
+questions = [
+    "What are the symptoms of flu?",
+    "How can I lose weight safely?",
+    "What is a healthy diet?",
+    "What is a good exercise routine?"
+]
+
+# Answer the questions
+for question in questions:
+    print(f"Question: {question}")
+    print("Answer: ", generate_health_response(question))
+    print("\n" + "="*50 + "\n")
